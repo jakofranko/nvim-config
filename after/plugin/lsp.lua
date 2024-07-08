@@ -1,0 +1,72 @@
+local lsp_zero = require('lsp-zero')
+
+lsp_zero.on_attach(function(client, bufnr)
+  -- see :help lsp-zero-keybindings
+  -- to learn the available actions
+  lsp_zero.default_keymaps({buffer = bufnr})
+	local opts = { buffer = bufnr, remap = false }
+	vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
+	vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
+	vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
+	vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
+	vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
+	vim.keymap.set("n", "<leader>f", function() vim.lsp.buf.format() end, opts)
+	vim.keymap.set("n", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
+end)
+
+-- to learn how to use mason.nvim
+-- read this: https://github.com/VonHeikemen/lsp-zero.nvim/blob/v3.x/doc/md/guide/integrate-with-mason-nvim.md
+local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+require('mason').setup({})
+require('mason-lspconfig').setup({
+	ensure_installed = {
+		"cssls",
+		"emmet_ls",
+		"eslint",
+		"html",
+		"htmx",
+		"marksman",
+		"rubocop"
+	},
+	handlers = {
+		function(server_name)
+			require('lspconfig')[server_name].setup({
+				capabilities = lsp_capabilities,
+			})
+		end,
+		lua_ls = function()
+			require('lspconfig').lua_ls.setup({
+				capabilities = lsp_capabilities,
+				settings = {
+					Lua = {
+						diagnostics = {
+							globals = {'vim'},
+						},
+						workspace = {
+							library = {
+								vim.env.VIMRUNTIME,
+							}
+						}
+					}
+				}
+			})
+		end,
+	}
+})
+local cmp = require('cmp')
+local cmp_select = {behavior = cmp.SelectBehavior.Select}
+
+cmp.setup({
+  sources = {
+    {name = 'path'},
+    {name = 'nvim_lsp'},
+    {name = 'buffer', keyword_length = 3},
+  },
+  mapping = cmp.mapping.preset.insert({
+    ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
+    ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
+    ['<C-y>'] = cmp.mapping.confirm({ select = true }),
+    ['<C-Space>'] = cmp.mapping.complete(),
+  }),
+})
