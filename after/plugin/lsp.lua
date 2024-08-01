@@ -27,7 +27,8 @@ require('mason-lspconfig').setup({
 		"html",
 		"htmx",
 		"marksman",
-		"rubocop"
+		"rubocop",
+        "gopls"
 	},
 	handlers = {
 		function(server_name)
@@ -50,6 +51,21 @@ require('mason-lspconfig').setup({
 						}
 					}
 				}
+			})
+		end,
+		gopls = function()
+			require('lspconfig').gopls.setup({
+				capabilities = lsp_capabilities,
+				settings = {
+                    gopls = {
+                        gofumpt = true,
+                        completeUnimported = true,
+                        usePlaceholders = true,
+                        analyses = {
+                            unusedparams = true,
+                        },
+                    },
+				},
 			})
 		end,
 	}

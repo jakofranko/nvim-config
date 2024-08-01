@@ -59,4 +59,25 @@ return require('packer').startup(function(use)
     use('freddiehaddad/feline.nvim')
     use('nvim-tree/nvim-web-devicons')
     use('lewis6991/gitsigns.nvim')
+    use {
+        'olexsmir/gopher.nvim',
+        ft = 'go',
+        requires = {
+            { 'nvim-lua/plenary.nvim' },
+            { 'nvim-treesitter/nvim-treesitter' },
+        },
+        ---@type gopher.Config
+        opts = {},
+        build = function()
+            vim.cmd.GoInstallDeps()
+        end,
+        config = function()
+            local g = require('gopher')
+            g.setup()
+            vim.keymap.set("n", "<leader>gtj", function() g.tags.add "json" end)
+            vim.keymap.set("n", "<leader>gty", function() g.tags.add "yaml" end)
+            vim.keymap.set("n", "<leader>gie", "<Cmd> GoIfErr <CR>")
+            vim.keymap.set("n", "<leader>gii", "<cmd> GoImpl ")
+        end
+    }
 end)
