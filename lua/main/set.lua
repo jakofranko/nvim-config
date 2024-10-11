@@ -53,3 +53,23 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     vim.lsp.buf.format({async = false})
   end
 })
+
+vim.api.nvim_create_autocmd("BufEnter", {
+    pattern = {"*.md"},
+    callback = function()
+        vim.schedule(function()
+            vim.opt.textwidth = 80
+            vim.opt.wrap = true
+        end)
+    end
+})
+
+vim.api.nvim_create_autocmd("BufLeave", {
+    pattern = {"*.md"},
+    callback = function()
+        vim.schedule(function()
+            vim.opt.wrap = false
+        end)
+    end
+})
+

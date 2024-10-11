@@ -1,3 +1,4 @@
+local nvim_lsp = require('lspconfig')
 local lsp_zero = require('lsp-zero')
 
 lsp_zero.on_attach(function(client, bufnr)
@@ -28,16 +29,18 @@ require('mason-lspconfig').setup({
 		"htmx",
 		"marksman",
 		"rubocop",
-        "gopls"
+        "gopls",
+        "ts_ls",
+        "denols"
 	},
 	handlers = {
 		function(server_name)
-			require('lspconfig')[server_name].setup({
+			nvim_lsp[server_name].setup({
 				capabilities = lsp_capabilities,
 			})
 		end,
 		lua_ls = function()
-			require('lspconfig').lua_ls.setup({
+			nvim_lsp.lua_ls.setup({
 				capabilities = lsp_capabilities,
 				settings = {
 					Lua = {
@@ -54,7 +57,7 @@ require('mason-lspconfig').setup({
 			})
 		end,
 		gopls = function()
-			require('lspconfig').gopls.setup({
+			nvim_lsp.gopls.setup({
 				capabilities = lsp_capabilities,
 				settings = {
                     gopls = {
@@ -68,6 +71,21 @@ require('mason-lspconfig').setup({
 				},
 			})
 		end,
+        denols = function()
+            nvim_lsp.denols.setup({
+                capabilities = lsp_capabilities,
+                on_attach = on_attach,
+                root_dir = nvim_lsp.util.root_pattern("deno.json", "deno.jsonc"),
+            })
+        end,
+        tsserver = function()
+            nvim_lsp.tsserver.setup({
+                capabilities = lsp_capabilities,
+                on_attach = on_attach,
+                root_dir = nvim_lsp.util.root_pattern("package.json"),
+                single_file_support = false
+            })
+        end
 	}
 })
 local cmp = require('cmp')

@@ -76,8 +76,13 @@ return require('packer').startup(function(use)
             g.setup()
             vim.keymap.set("n", "<leader>gtj", function() g.tags.add "json" end)
             vim.keymap.set("n", "<leader>gty", function() g.tags.add "yaml" end)
-            vim.keymap.set("n", "<leader>gie", "<Cmd> GoIfErr <CR>")
-            vim.keymap.set("n", "<leader>gii", "<cmd> GoImpl ")
+            vim.keymap.set("n", "<leader>gie", function() vim.cmd('GoIfErr') end)
+            vim.keymap.set("n", "<leader>gii", function() vim.cmd('GoImpl') end)
         end
     }
+    use {
+        "lukas-reineke/headlines.nvim",
+        after = "nvim-treesitter"
+    }
+    use('bullets-vim/bullets.vim')
 end)
