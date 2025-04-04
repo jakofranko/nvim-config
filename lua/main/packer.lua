@@ -56,7 +56,7 @@ return require('packer').startup(function(use)
         end
     })
     use('mattn/emmet-vim')
-    use('freddiehaddad/feline.nvim')
+    use('famiu/feline.nvim')
     use('nvim-tree/nvim-web-devicons')
     use('lewis6991/gitsigns.nvim')
     use {
@@ -85,4 +85,5 @@ return require('packer').startup(function(use)
         after = "nvim-treesitter"
     }
     use('bullets-vim/bullets.vim')
+    use('stevearc/oil.nvim')
 end)

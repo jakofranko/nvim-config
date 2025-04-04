@@ -78,11 +78,11 @@ require('mason-lspconfig').setup({
                 root_dir = nvim_lsp.util.root_pattern("deno.json", "deno.jsonc"),
             })
         end,
-        tsserver = function()
-            nvim_lsp.tsserver.setup({
+        ts_ls = function()
+            nvim_lsp.ts_ls.setup({
                 capabilities = lsp_capabilities,
                 on_attach = on_attach,
-                root_dir = nvim_lsp.util.root_pattern("package.json"),
+                root_dir = nvim_lsp.util.root_pattern("tsconfig.json"),
                 single_file_support = false
             })
         end
