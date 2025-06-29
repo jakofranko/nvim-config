@@ -21,3 +21,14 @@ vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
 vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
 
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+
+-- LSP keymaps
+vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end)
+vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end)
+vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end)
+vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end)
+vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end)
+vim.keymap.set("n", "<leader>f", function() vim.lsp.buf.format({
+    timeout_ms = 2000
+}) end)
+vim.keymap.set("n", "<C-h>", function() vim.lsp.buf.signature_help() end)

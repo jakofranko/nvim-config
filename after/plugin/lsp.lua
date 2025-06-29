@@ -1,26 +1,20 @@
 local nvim_lsp = require('lspconfig')
-local lsp_zero = require('lsp-zero')
 
-lsp_zero.on_attach(function(client, bufnr)
-  -- see :help lsp-zero-keybindings
-  -- to learn the available actions
-  lsp_zero.default_keymaps({buffer = bufnr})
-	local opts = { buffer = bufnr, remap = false }
-	vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
-	vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
-	vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
-	vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
-	vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
-	vim.keymap.set("n", "<leader>f", function() vim.lsp.buf.format() end, opts)
-	vim.keymap.set("n", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
-end)
+-- Non-Mason LSPs
+nvim_lsp.dartls.setup({
+    cmd = { 'dart', "C:\\tools\\dart-sdk\\bin\\snapshots\\analysis_server.dart.snapshot", '--lsp' },
+})
 
 -- to learn how to use mason.nvim
 -- read this: https://github.com/VonHeikemen/lsp-zero.nvim/blob/v3.x/doc/md/guide/integrate-with-mason-nvim.md
 local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
 
+-- Mason can still be used to manage LSPs, but as of 0.11,
+-- they now have to be enabled semi-manually.
+-- In the future, may not need mason at all.
 require('mason').setup({})
 require('mason-lspconfig').setup({
+    automatic_enable = false,
 	ensure_installed = {
 		"cssls",
 		"emmet_ls",
@@ -28,8 +22,8 @@ require('mason-lspconfig').setup({
 		"html",
 		"htmx",
 		"marksman",
-		"rubocop",
         "gopls",
+		"rubocop",
         "ts_ls",
         "denols"
 	},
@@ -54,21 +48,6 @@ require('mason-lspconfig').setup({
 						}
 					}
 				}
-			})
-		end,
-		gopls = function()
-			nvim_lsp.gopls.setup({
-				capabilities = lsp_capabilities,
-				settings = {
-                    gopls = {
-                        gofumpt = true,
-                        completeUnimported = true,
-                        usePlaceholders = true,
-                        analyses = {
-                            unusedparams = true,
-                        },
-                    },
-				},
 			})
 		end,
         denols = function()
