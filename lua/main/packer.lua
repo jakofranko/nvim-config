@@ -20,18 +20,68 @@ return require('packer').startup(function(use)
         requires = { {'nvim-lua/plenary.nvim'} }
     }
 
-    -- Syntax Highlighting
+    -- Themes
+    use({ 'bluz71/vim-nightfly-colors', as = 'nightfly' })
+    use({ 
+        'sainnhe/gruvbox-material',
+        config = function()
+            vim.g.gruvbox_material_enable_italic = true
+            vim.cmd.colorscheme('gruvbox-material')
+        end
+    })
+    use({ 
+        'folke/tokyonight.nvim', 
+        as = 'tokyonight',
+        -- config = function()
+        --     vim.cmd('colorscheme tokyonight')
+        -- end
+    })
+
+    -- Rendering / UI
+    use('lewis6991/gitsigns.nvim')
+    use('nvim-tree/nvim-web-devicons')
+    use {
+        'nvim-lualine/lualine.nvim',
+        requires = { 'nvim-tree/nvim-web-devicons' }
+    }
+    use {
+        'AndreM222/copilot-lualine',
+        requires = { 'nvim-lualine/lualine.nvim', 'zbirenbaum/copilot.lua' }
+    }
+    use('MunifTanjim/nui.nvim') -- NeoVim UI Component librar
+    use('folke/which-key.nvim') -- Keybinding hints
     use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate'})
     use('nvim-treesitter/playground')
+    use({
+        'MeanderingProgrammer/render-markdown.nvim',
+        after = { 'nvim-treesitter' },
+        requires = { 'nvim-tree/nvim-web-devicons', opt = true },
+        -- There are options for mini.nvim and mini.icons...for future reference
+        config = function()
+            require('render-markdown').setup({})
+        end
+    })
 
-    -- LSP utils
-    use('neovim/nvim-lspconfig')
+    -- cmp auto-completion
     use('hrsh7th/nvim-cmp')
+    use('hrsh7th/vim-vsnip')
+    use('hrsh7th/cmp-vsnip')
     use('hrsh7th/cmp-nvim-lsp')
-    use('L3MON4D3/LuaSnip')
+	use {
+	  "zbirenbaum/copilot-cmp",
+	  after = { "copilot.lua" },
+	  config = function ()
+		require("copilot_cmp").setup()
+	  end
+	}
+
+
+    -- LSP -> Deprecate in favor of nvim 0.11 native LSPs
+    use('neovim/nvim-lspconfig')
     use('williamboman/mason.nvim')
     use('williamboman/mason-lspconfig.nvim')
 
+    -- Utils
     use {
         "theprimeagen/harpoon",
         branch = "harpoon2",
@@ -56,22 +106,24 @@ return require('packer').startup(function(use)
             vim.keymap.set("n", "<C-S-N>", function() harpoon:list():next() end)
         end
     }
-
-
-    use('mbbill/undotree')
-    use('tpope/vim-fugitive')
+    use('mbbill/undotree')          -- Undo history UI
+    use('tpope/vim-fugitive')       -- :Git stuff
     use('tpope/vim-surround')
-    use({ 
-        'folke/tokyonight.nvim', 
-        as = 'tokyonight',
+    use('mattn/emmet-vim')          -- HTML musthave
+    use('bullets-vim/bullets.vim')  -- Auto bullet list creation
+    use('stevearc/oil.nvim')        -- File system viewer
+
+    -- Debugging / DAP plugins
+    use('mfussenegger/nvim-dap')
+    use({
+        'leoluz/nvim-dap-go',
         config = function()
-            vim.cmd('colorscheme tokyonight')
-        end
+            require('dap-go').setup()
+        end,
+        requires = { 'mfussenegger/nvim-dap' }
     })
-    use('mattn/emmet-vim')
-    use('famiu/feline.nvim')
-    use('nvim-tree/nvim-web-devicons')
-    use('lewis6991/gitsigns.nvim')
+
+    -- Go
     use {
         'olexsmir/gopher.nvim',
         ft = 'go',
@@ -93,12 +145,23 @@ return require('packer').startup(function(use)
             vim.keymap.set("n", "<leader>gii", function() vim.cmd('GoImpl') end)
         end
     }
+
+	-- Lua
+	use({ -- Format Lua
+        "ckipp01/stylua-nvim", 
+        run = "cargo install stylua"
+    })
+
+    -- AI garbage
     use {
-        "lukas-reineke/headlines.nvim",
-        after = "nvim-treesitter"
+        'zbirenbaum/copilot.lua',
+        config = function()
+            require('copilot').setup({
+                suggestion = { enabled = false }, -- Disabled to work with copilot-cmp
+                panel = { enabled = false }
+            })
+        end
     }
-    use('bullets-vim/bullets.vim')
-    use('stevearc/oil.nvim')
 
 	-- Automatically set up your configuration after cloning packer.nvim
 	-- Put this at the end after all plugins

@@ -73,3 +73,7 @@ vim.api.nvim_create_autocmd("BufLeave", {
     end
 })
 
+vim.diagnostic.config({
+-- virtual_lines = true,
+ virtual_text = true
+})
