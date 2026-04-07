@@ -22,15 +22,15 @@ return require('packer').startup(function(use)
 
     -- Themes
     use({ 'bluz71/vim-nightfly-colors', as = 'nightfly' })
-    use({ 
+    use({
         'sainnhe/gruvbox-material',
         config = function()
             vim.g.gruvbox_material_enable_italic = true
             vim.cmd.colorscheme('gruvbox-material')
         end
     })
-    use({ 
-        'folke/tokyonight.nvim', 
+    use({
+        'folke/tokyonight.nvim',
         as = 'tokyonight',
         -- config = function()
         --     vim.cmd('colorscheme tokyonight')
@@ -66,6 +66,8 @@ return require('packer').startup(function(use)
     use('hrsh7th/nvim-cmp')
     use('hrsh7th/vim-vsnip')
     use('hrsh7th/cmp-vsnip')
+    use('hrsh7th/cmp-path')
+    use('hrsh7th/cmp-buffer')
     use('hrsh7th/cmp-nvim-lsp')
 	use {
 	  "zbirenbaum/copilot-cmp",
@@ -92,7 +94,7 @@ return require('packer').startup(function(use)
             -- REQUIRED
             harpoon:setup()
             -- REQUIRED
-            
+
             vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)
             vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
 
@@ -148,7 +150,7 @@ return require('packer').startup(function(use)
 
 	-- Lua
 	use({ -- Format Lua
-        "ckipp01/stylua-nvim", 
+        "ckipp01/stylua-nvim",
         run = "cargo install stylua"
     })
 
